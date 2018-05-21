@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/shuffle_icon_background" />
+    <item
+        android:bottom="@dimen/shuffle_icon_padding"
+        android:drawable="@drawable/ic_shuffle"
+        android:left="@dimen/shuffle_icon_padding"
+        android:right="@dimen/shuffle_icon_padding"
+        android:top="@dimen/shuffle_icon_padding" />
+
+</layer-list>
