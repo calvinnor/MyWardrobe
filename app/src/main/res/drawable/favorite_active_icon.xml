@@ -3,7 +3,7 @@
     <item android:drawable="@drawable/accent_background" />
     <item
         android:bottom="@dimen/shuffle_icon_padding"
-        android:drawable="@drawable/ic_shuffle"
+        android:drawable="@drawable/ic_favorite_filled"
         android:left="@dimen/shuffle_icon_padding"
         android:right="@dimen/shuffle_icon_padding"
         android:top="@dimen/shuffle_icon_padding" />

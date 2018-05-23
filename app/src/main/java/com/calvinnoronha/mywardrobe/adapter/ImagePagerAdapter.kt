@@ -5,28 +5,59 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.calvinnoronha.mywardrobe.R
 import com.calvinnoronha.mywardrobe.model.WardrobeElement
-import kotlinx.android.synthetic.main.layout_wardrobe_element.view.*
+
 
 /**
  * PagerAdapter which holds a list of Wardrobe elements.
  * This is responsible for showing a list of images.
  */
-class ImagePagerAdapter(private val imageList: MutableList<WardrobeElement>) : PagerAdapter() {
+class ImagePagerAdapter<T : WardrobeElement> : PagerAdapter() {
+
+    private var imageList: MutableList<T> = ArrayList()
+    private var glideRequestOptions = RequestOptions()
+
+    /**
+     * Set the items for this Image Adapter.
+     */
+    fun setItems(itemsList: MutableList<T>) {
+        this.imageList.apply {
+            clear()
+            addAll(itemsList)
+        }
+
+        if (imageList.isNotEmpty()) {
+            glideRequestOptions = RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(imageList[0].getPlaceholder())
+        }
+
+        notifyDataSetChanged()
+    }
+
+    fun getItems() = imageList
 
     override fun isViewFromObject(view: View, `object`: Any) = view == `object`
 
     override fun getCount() = imageList.size
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val inflater = LayoutInflater.from(container.context)
+        val context = container.context
+        val inflater = LayoutInflater.from(context)
         val imageView = inflater.inflate(R.layout.layout_wardrobe_element,
                 container, false) as ImageView
 
         val wardrobeElement = imageList[position]
 
-        imageView.wardrobe_element_content.setImageResource(wardrobeElement.getPlaceholder())
+        Glide.with(context)
+                .applyDefaultRequestOptions(glideRequestOptions)
+                .load(wardrobeElement.getContent())
+                .into(imageView)
+
         container.addView(imageView)
         return imageView
     }

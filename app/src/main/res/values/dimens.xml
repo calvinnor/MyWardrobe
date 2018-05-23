@@ -5,6 +5,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
 
+    <!-- Home -->
+    <dimen name="home_add_button_margin">10dp</dimen>
+
     <!-- Icons -->
     <dimen name="icon_padding">8dp</dimen>
     <dimen name="icon_background_size">10dp</dimen>

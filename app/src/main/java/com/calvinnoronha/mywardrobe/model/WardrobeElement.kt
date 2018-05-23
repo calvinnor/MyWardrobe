@@ -5,5 +5,9 @@ package com.calvinnoronha.mywardrobe.model
  */
 abstract class WardrobeElement {
 
+    abstract fun getContent(): String
+
     abstract fun getPlaceholder(): Int
+
+    abstract fun getType(): WardrobeType
 }
