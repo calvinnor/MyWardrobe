@@ -9,3 +9,8 @@ package com.calvinnoronha.mywardrobe.util
 fun Any?.isNull() = this == null
 
 fun Any?.isNotNull() = !this.isNull()
+
+/**
+ * Check if an integer is greater than a given bound.
+ */
+infix fun Int.greaterThan(num: Int) = this > num

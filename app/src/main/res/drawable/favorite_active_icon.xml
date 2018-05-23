@@ -2,10 +2,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/accent_background" />
     <item
-        android:bottom="@dimen/shuffle_icon_padding"
+        android:bottom="@dimen/home_icon_padding"
         android:drawable="@drawable/ic_favorite_filled"
-        android:left="@dimen/shuffle_icon_padding"
-        android:right="@dimen/shuffle_icon_padding"
-        android:top="@dimen/shuffle_icon_padding" />
+        android:left="@dimen/home_icon_padding"
+        android:right="@dimen/home_icon_padding"
+        android:top="@dimen/home_icon_padding" />
 
 </layer-list>

@@ -21,4 +21,5 @@ fun getImageCaptureIntent(imageUri: Uri) = Intent(MediaStore.ACTION_IMAGE_CAPTUR
  */
 fun getImagePickIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {
     type = IMAGE_MIME_TYPE
+    addCategory(Intent.CATEGORY_OPENABLE)
 }

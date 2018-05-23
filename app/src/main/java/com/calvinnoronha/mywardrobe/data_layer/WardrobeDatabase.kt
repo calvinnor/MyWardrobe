@@ -3,7 +3,6 @@ package com.calvinnoronha.mywardrobe.data_layer
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import com.calvinnoronha.mywardrobe.app.DATABASE_IN_MEMORY_TEST
 import com.calvinnoronha.mywardrobe.data_layer.dao.BottomDao
@@ -26,16 +25,23 @@ abstract class WardrobeDatabase : RoomDatabase() {
         private lateinit var INSTANCE: WardrobeDatabase
         lateinit var dbThread: DbThread
 
+        /**
+         * Dao methods for fetching DB operation objects.
+         */
+        fun topDao() = INSTANCE.topDao()
+        fun bottomDao() = INSTANCE.bottomDao()
+        fun favoriteDao() = INSTANCE.favoriteDao()
+
+        /**
+         * Initialise the Room database.
+         * Lazily initialised from Application.
+         */
         fun init(context: Context) {
             INSTANCE = getDatabase(context.applicationContext, WardrobeDatabase::class.java, DATABASE_NAME)
                     .build()
             dbThread = DbThread(threadName = "DbThread")
             dbThread.start()
         }
-
-        fun topDao() = INSTANCE.topDao()
-        fun bottomDao() = INSTANCE.bottomDao()
-        fun favoriteDao() = INSTANCE.favoriteDao()
 
         private fun <T : RoomDatabase> getDatabase(appContext: Context, klass: Class<T>, dbName: String): RoomDatabase.Builder<T> {
             return if (DATABASE_IN_MEMORY_TEST)

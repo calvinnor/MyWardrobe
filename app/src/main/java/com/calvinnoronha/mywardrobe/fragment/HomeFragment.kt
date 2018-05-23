@@ -1,6 +1,7 @@
 package com.calvinnoronha.mywardrobe.fragment
 
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.view.View
 import com.calvinnoronha.mywardrobe.R
 import com.calvinnoronha.mywardrobe.adapter.ImagePagerAdapter
@@ -16,7 +17,8 @@ import com.calvinnoronha.mywardrobe.model.WardrobeType
 import com.calvinnoronha.mywardrobe.util.Events
 import com.calvinnoronha.mywardrobe.util.getRandomId
 import com.calvinnoronha.mywardrobe.util.getRandomInt
-import kotlinx.android.synthetic.main.fragment_main.*
+import com.calvinnoronha.mywardrobe.util.greaterThan
+import kotlinx.android.synthetic.main.fragment_home.*
 import org.greenrobot.eventbus.Subscribe
 
 /**
@@ -25,7 +27,7 @@ import org.greenrobot.eventbus.Subscribe
 class HomeFragment : BasePickerFragment() {
 
     override val fragmentTag = TAG
-    override val layout = R.layout.fragment_main
+    override val layout = R.layout.fragment_home
 
     companion object {
         const val TAG = "HomeFragment"
@@ -33,24 +35,22 @@ class HomeFragment : BasePickerFragment() {
         private const val SAVE_FAVORITE = "save_favorite"
         private const val SAVE_CURRENT_TOP = "save_current_top"
         private const val SAVE_CURRENT_BOTTOM = "save_current_bottom"
+
+        // Allow more pages to be cached off-screen to allow smooth scrolling
+        private const val VIEWPAGER_OFFSCREEN_CACHE = 3
     }
 
     private val topPagerAdapter = ImagePagerAdapter<TopElement>()
     private val bottomPagerAdapter = ImagePagerAdapter<BottomElement>()
 
-    private var isFavorite = false
     private var currentTop: String = ""
     private var currentBottom: String = ""
+    private var isFavorite = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        add_top_element.setOnClickListener { showImageSourceDialog(WardrobeType.TOP) }
-        add_bottom_element.setOnClickListener { showImageSourceDialog(WardrobeType.BOTTOM) }
-        wardrobe_shuffle.setOnClickListener { shuffleItems() }
-        favorite_element.setOnClickListener { toggleFavorite() }
-
+        setupListeners()
         if (savedInstanceState != null) restoreFromState(savedInstanceState)
-        toggleFavoriteButton()
     }
 
     override fun onStart() {
@@ -76,53 +76,83 @@ class HomeFragment : BasePickerFragment() {
         currentBottom = inState.getString(SAVE_CURRENT_BOTTOM)
     }
 
+    private fun setupListeners() {
+        add_top_element.setOnClickListener { showImageSourceDialog(WardrobeType.TOP) }
+        add_bottom_element.setOnClickListener { showImageSourceDialog(WardrobeType.BOTTOM) }
+        wardrobe_shuffle.setOnClickListener { shuffleItems() }
+        favorite_element.setOnClickListener { toggleFavorite() }
+    }
+
     private fun shuffleItems() {
-        wardrobe_top_viewpager.setCurrentItem(getRandomInt(topPagerAdapter.count), true)
-        wardrobe_bottom_viewpager.setCurrentItem(getRandomInt(bottomPagerAdapter.count), true)
+        if (topPagerAdapter.count greaterThan 1)
+            wardrobe_top_viewpager.setCurrentItem(getRandomInt(topPagerAdapter.count), true)
+
+        if (bottomPagerAdapter.count greaterThan 1)
+            wardrobe_bottom_viewpager.setCurrentItem(getRandomInt(bottomPagerAdapter.count), true)
     }
 
-    private fun setupViews() {
+    private fun setupViewPagers() {
         topPagerAdapter.setItems(DataRepo.getTops())
-        wardrobe_top_viewpager.adapter = topPagerAdapter
-
         bottomPagerAdapter.setItems(DataRepo.getBottoms())
-        wardrobe_bottom_viewpager.adapter = bottomPagerAdapter
 
-        wardrobe_top_viewpager.addOnPageChangeListener(object : PageChangedListener() {
+        wardrobe_top_viewpager.apply {
+            offscreenPageLimit = VIEWPAGER_OFFSCREEN_CACHE
+            addOnPageChangeListener(object : PageChangedListener() {
 
-            override fun onPageSelected(position: Int) {
-                currentTop = topPagerAdapter.getItems()[position].id
-                toggleFavoriteButton()
-            }
-        })
+                override fun onPageSelected(position: Int) {
+                    currentTop = topPagerAdapter.getItems()[position].id
+                    toggleFavoriteIcon()
+                }
+            })
+            adapter = topPagerAdapter
+        }
 
-        wardrobe_bottom_viewpager.addOnPageChangeListener(object : PageChangedListener() {
+        wardrobe_bottom_viewpager.apply {
+            offscreenPageLimit = VIEWPAGER_OFFSCREEN_CACHE
+            addOnPageChangeListener(object : PageChangedListener() {
 
-            override fun onPageSelected(position: Int) {
-                currentBottom = bottomPagerAdapter.getItems()[position].id
-                toggleFavoriteButton()
-            }
-        })
+                override fun onPageSelected(position: Int) {
+                    currentBottom = bottomPagerAdapter.getItems()[position].id
+                    toggleFavoriteIcon()
+                }
+            })
+            adapter = bottomPagerAdapter
+        }
     }
 
-    private fun toggleFavoriteButton() {
+    private fun toggleFavoriteIcon() {
         isFavorite = DataRepo.isFavorite(currentTop, currentBottom)
         val imageRes = if (isFavorite) R.drawable.favorite_active_icon else R.drawable.favorite_inactive_icon
         favorite_element.setImageResource(imageRes)
     }
 
     private fun toggleFavorite() {
-        if (isFavorite) {
-            DataRepo.removeFavorite(currentTop, currentBottom)
-        } else {
-            DataRepo.addFavorite(FavoriteModel(getRandomId(), currentTop, currentBottom))
+        if (currentTop.isBlank() || currentBottom.isBlank()) {
+            AlertDialog.Builder(context!!)
+                    .setTitle(R.string.favorite_error_title)
+                    .setMessage(R.string.favorite_error_message)
+                    .show()
+            return
         }
-        toggleFavoriteButton()
+        if (isFavorite) DataRepo.removeFavorite(currentTop, currentBottom)
+        else DataRepo.addFavorite(FavoriteModel(getRandomId(), currentTop, currentBottom))
+        toggleFavoriteIcon()
+    }
+
+    private fun initialiseCurrents() {
+        if (currentTop.isBlank() && topPagerAdapter.getItems().isNotEmpty()) {
+            currentTop = topPagerAdapter.getItems()[0].id
+        }
+        if (currentBottom.isBlank() && bottomPagerAdapter.getItems().isNotEmpty()) {
+            currentBottom = bottomPagerAdapter.getItems()[0].id
+        }
     }
 
     @Subscribe(sticky = true)
     fun onWardrobeLoaded(loadedEvent: WardrobeLoadedEvent) {
-        setupViews()
+        setupViewPagers()
+        initialiseCurrents()
+        toggleFavoriteIcon()
     }
 
     @Subscribe

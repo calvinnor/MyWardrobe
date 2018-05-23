@@ -52,12 +52,9 @@ fun File.writeToFile(inputStream: InputStream) {
     inputStream.close()
 }
 
-/*
-
-     * Gets the file path of the given Uri.
-
-     */
-
+/**
+ * Gets the file path of the given Content Uri.
+ */
 @SuppressLint("NewApi")
 fun getPath(context: Context, uri: Uri): String? {
     var fileUri = uri

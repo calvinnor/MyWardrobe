@@ -9,26 +9,25 @@
         android:id="@+id/wardrobe_top_viewpager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/wardrobe_bottom_viewpager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintRight_toLeftOf="@+id/wardrobe_bottom_viewpager"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/wardrobe_bottom_viewpager"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toRightOf="@+id/wardrobe_top_viewpager"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wardrobe_top_viewpager"
-        app:layout_constraintVertical_weight="1" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/wardrobe_shuffle"
-        android:layout_width="@dimen/shuffle_icon_size"
-        android:layout_height="@dimen/shuffle_icon_size"
+        style="@style/HomeIconStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -37,32 +36,23 @@
 
     <ImageView
         android:id="@+id/add_top_element"
-        android:layout_width="@dimen/shuffle_icon_size"
-        android:layout_height="@dimen/shuffle_icon_size"
-        android:layout_margin="@dimen/home_add_button_margin"
-        android:background="?android:attr/selectableItemBackground"
-        app:layout_constraintRight_toRightOf="parent"
+        style="@style/HomeIconStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/add_icon" />
 
     <ImageView
         android:id="@+id/add_bottom_element"
-        android:layout_width="@dimen/shuffle_icon_size"
-        android:layout_height="@dimen/shuffle_icon_size"
-        android:layout_margin="@dimen/home_add_button_margin"
-        android:background="?android:attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/HomeIconStyle"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/ic_add" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/add_icon" />
 
     <ImageView
         android:id="@+id/favorite_element"
-        android:layout_width="@dimen/shuffle_icon_size"
-        android:layout_height="@dimen/shuffle_icon_size"
-        android:layout_margin="@dimen/home_add_button_margin"
-        android:background="?android:attr/selectableItemBackground"
+        style="@style/HomeIconStyle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/ic_favorite" />
 

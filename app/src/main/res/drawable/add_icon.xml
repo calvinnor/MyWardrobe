@@ -3,7 +3,7 @@
     <item android:drawable="@drawable/accent_background" />
     <item
         android:bottom="@dimen/home_icon_padding"
-        android:drawable="@drawable/ic_favorite"
+        android:drawable="@drawable/ic_add"
         android:left="@dimen/home_icon_padding"
         android:right="@dimen/home_icon_padding"
         android:top="@dimen/home_icon_padding" />

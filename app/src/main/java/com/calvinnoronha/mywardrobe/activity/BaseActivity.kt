@@ -7,7 +7,7 @@ import android.support.annotation.MenuRes
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import com.calvinnoronha.mywardrobe.fragment.BaseFragment
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_home.*
 
 /**
  * Base Activity to inherit from.

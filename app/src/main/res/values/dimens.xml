@@ -5,14 +5,18 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
 
-    <!-- Home -->
-    <dimen name="home_add_button_margin">10dp</dimen>
+    <!-- Text -->
+    <dimen name="text_size_large">28sp</dimen>
 
-    <!-- Icons -->
+    <!-- Home -->
+    <dimen name="home_toolbar_top_margin">12dp</dimen>
+
+    <!-- Home Icons -->
+    <dimen name="home_button_margin">15dp</dimen>
+    <dimen name="home_icon_size">40dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
     <dimen name="icon_background_size">10dp</dimen>
-    <dimen name="shuffle_icon_size">40dp</dimen>
-    <dimen name="shuffle_icon_background_size">@dimen/icon_background_size</dimen>
-    <dimen name="shuffle_icon_padding">@dimen/icon_padding</dimen>
+    <dimen name="accent_background_size">@dimen/icon_background_size</dimen>
+    <dimen name="home_icon_padding">@dimen/icon_padding</dimen>
 
 </resources>

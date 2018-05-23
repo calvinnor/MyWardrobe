@@ -11,5 +11,7 @@
 
     <!-- Errors -->
     <string name="error_no_camera_app">There\'s no application capable of taking an image. Please install one</string>
+    <string name="favorite_error_title">No combination selected</string>
+    <string name="favorite_error_message">Sorry, you cannot mark an empty combination as favorite. \n\nConsider adding some Tops &amp; Bottoms to use this feature!</string>
 
 </resources>

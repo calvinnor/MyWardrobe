@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
-import android.view.View
 import android.widget.Toast
 import com.calvinnoronha.mywardrobe.BuildConfig
 import com.calvinnoronha.mywardrobe.R
@@ -20,9 +19,10 @@ import com.calvinnoronha.mywardrobe.model.BottomElement
 import com.calvinnoronha.mywardrobe.model.TopElement
 import com.calvinnoronha.mywardrobe.model.WardrobeType
 import com.calvinnoronha.mywardrobe.util.*
+import java.io.File
 
 /**
- * Base class for Media handling - Click image / pick from gallery
+ * Base class for Media handling - Click image / Pick from gallery
  */
 abstract class BasePickerFragment : BaseFragment() {
 
@@ -76,12 +76,10 @@ abstract class BasePickerFragment : BaseFragment() {
             return
         }
 
-        wardrobeId = getRandomId()
-        val imageFile = createImageFile(context!!, wardrobeId!!)
-        wardrobeFilePath = imageFile.absolutePath
         this.wardrobeType = wardrobeType
+        val imageFile = buildFileForImageAndSetupPaths()
 
-        // Get the Uri for image to allow Glide access
+        // Get the Uri for image to allow camera write
         val imageUri = FileProvider.getUriForFile(context!!, FILE_PROVIDER_AUTHORITY, imageFile)
 
         // Build the Intent and start the camera
@@ -112,12 +110,6 @@ abstract class BasePickerFragment : BaseFragment() {
         outState.putString(SAVE_WARDROBE_FILE, wardrobeFilePath)
     }
 
-    private fun restoreFromState(inState: Bundle) {
-        wardrobeType = inState.getSerializable(SAVE_WARDROBE_TYPE) as WardrobeType
-        wardrobeId = inState.getString(SAVE_WARDROBE_ID)
-        wardrobeFilePath = inState.getString(SAVE_WARDROBE_FILE)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CAPTURE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -136,6 +128,12 @@ abstract class BasePickerFragment : BaseFragment() {
 
             internalPickFromGallery()
         }
+    }
+
+    private fun restoreFromState(inState: Bundle) {
+        wardrobeType = inState.getSerializable(SAVE_WARDROBE_TYPE) as WardrobeType
+        wardrobeId = inState.getString(SAVE_WARDROBE_ID)
+        wardrobeFilePath = inState.getString(SAVE_WARDROBE_FILE)
     }
 
     private fun handleAddedItem() {
@@ -157,9 +155,18 @@ abstract class BasePickerFragment : BaseFragment() {
 
     private fun handleImagePicked(intent: Intent) {
         if (intent.data == null) return
-        wardrobeFilePath = intent.data.toString()
-        wardrobeId = getRandomId()
+
+        val imageFile = buildFileForImageAndSetupPaths()
+        imageFile.writeToFile(context?.contentResolver?.openInputStream(intent.data)!!)
+
         handleAddedItem()
+    }
+
+    private fun buildFileForImageAndSetupPaths(): File {
+        wardrobeId = getRandomId()
+        val imageFile = createImageFile(context!!, wardrobeId!!)
+        wardrobeFilePath = imageFile.absolutePath
+        return imageFile
     }
 
     private fun internalPickFromGallery() {

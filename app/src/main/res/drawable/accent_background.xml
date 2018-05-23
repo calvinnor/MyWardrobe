@@ -3,8 +3,8 @@
     android:shape="oval">
 
     <size
-        android:width="@dimen/shuffle_icon_background_size"
-        android:height="@dimen/shuffle_icon_background_size" />
+        android:width="@dimen/accent_background_size"
+        android:height="@dimen/accent_background_size" />
 
     <solid android:color="@color/colorAccent" />
 

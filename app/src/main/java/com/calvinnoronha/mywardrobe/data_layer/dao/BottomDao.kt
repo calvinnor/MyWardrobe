@@ -7,7 +7,7 @@ import com.calvinnoronha.mywardrobe.data_layer.BOTTOM_TABLE_NAME
 import com.calvinnoronha.mywardrobe.model.BottomElement
 
 /**
- * This interface is used for DB persistence and retrieval.
+ * This interface is used for Bottom DB persistence and retrieval.
  */
 @Dao
 interface BottomDao {

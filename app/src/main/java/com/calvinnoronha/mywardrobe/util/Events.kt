@@ -5,11 +5,11 @@ import org.greenrobot.eventbus.EventBus
 /**
  * Application-level Event posts & subscriptions.
  *
- * Internally uses GreenRobot's Events library.
+ * Internally uses GreenRobot's EventBus library.
  */
 object Events {
 
-    private var eventBus: EventBus = EventBus.getDefault()
+    private var eventBus = EventBus.getDefault()
 
     /**
      * Subscribe a class for events.

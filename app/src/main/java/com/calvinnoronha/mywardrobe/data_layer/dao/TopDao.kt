@@ -7,7 +7,7 @@ import com.calvinnoronha.mywardrobe.data_layer.TOP_TABLE_NAME
 import com.calvinnoronha.mywardrobe.model.TopElement
 
 /**
- * This interface is used for DB persistence and retrieval.
+ * This interface is used for Top DB persistence and retrieval.
  */
 @Dao
 interface TopDao {
