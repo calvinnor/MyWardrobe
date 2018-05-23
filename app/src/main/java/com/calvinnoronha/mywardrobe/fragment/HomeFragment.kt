@@ -110,9 +110,7 @@ class HomeFragment : BasePickerFragment() {
             addOnPageChangeListener(object : PageChangedListener() {
 
                 override fun onPageSelected(position: Int) {
-                    currentTopPosition = position
-                    currentTop = topPagerAdapter.getItems()[position].id
-                    toggleFavoriteIcon()
+                    provideTopPosition(position)
                 }
             })
             adapter = topPagerAdapter
@@ -123,9 +121,7 @@ class HomeFragment : BasePickerFragment() {
             addOnPageChangeListener(object : PageChangedListener() {
 
                 override fun onPageSelected(position: Int) {
-                    currentBottomPosition = position
-                    currentBottom = bottomPagerAdapter.getItems()[position].id
-                    toggleFavoriteIcon()
+                    provideBottomPosition(position)
                 }
             })
             adapter = bottomPagerAdapter
@@ -136,6 +132,18 @@ class HomeFragment : BasePickerFragment() {
         isFavorite = DataRepo.isFavorite(currentTop, currentBottom)
         val imageRes = if (isFavorite) R.drawable.favorite_active_icon else R.drawable.favorite_inactive_icon
         favorite_element.setImageResource(imageRes)
+    }
+
+    private fun provideTopPosition(position: Int) {
+        currentTopPosition = position
+        currentTop = topPagerAdapter.getItems()[position].id
+        toggleFavoriteIcon()
+    }
+
+    private fun provideBottomPosition(position: Int) {
+        currentBottomPosition = position
+        currentBottom = bottomPagerAdapter.getItems()[position].id
+        toggleFavoriteIcon()
     }
 
     private fun toggleFavorite() {
@@ -176,13 +184,17 @@ class HomeFragment : BasePickerFragment() {
     fun onTopAdded(topAddedEvent: TopAddedEvent) {
         Events.removeSticky(topAddedEvent)
         topPagerAdapter.setItems(DataRepo.getTops())
-        wardrobe_top_viewpager.currentItem = currentTopPosition
+        wardrobe_top_viewpager.setCurrentItem(currentTopPosition, false)
+
+        if (topPagerAdapter.count == 1) provideTopPosition(0)
     }
 
     @Subscribe(sticky = true)
     fun onBottomAdded(bottomAddedEvent: BottomAddedEvent) {
         Events.removeSticky(bottomAddedEvent)
         bottomPagerAdapter.setItems(DataRepo.getBottoms())
-        wardrobe_bottom_viewpager.currentItem = currentBottomPosition
+        wardrobe_bottom_viewpager.setCurrentItem(currentBottomPosition, false)
+
+        if (bottomPagerAdapter.count == 1) provideBottomPosition(0)
     }
 }
