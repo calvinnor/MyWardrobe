@@ -142,13 +142,13 @@ abstract class BasePickerFragment : BaseFragment() {
             WardrobeType.TOP -> {
                 val topElement = TopElement(wardrobeId!!, wardrobeFilePath!!)
                 DataRepo.addTop(topElement)
-                Events.post(TopAddedEvent(topElement))
+                Events.postSticky(TopAddedEvent(topElement))
             }
 
             WardrobeType.BOTTOM -> {
                 val bottomElement = BottomElement(wardrobeId!!, wardrobeFilePath!!)
                 DataRepo.addBottom(bottomElement)
-                Events.post(BottomAddedEvent(bottomElement))
+                Events.postSticky(BottomAddedEvent(bottomElement))
             }
         }
     }

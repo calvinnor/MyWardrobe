@@ -35,6 +35,8 @@ class HomeFragment : BasePickerFragment() {
         private const val SAVE_FAVORITE = "save_favorite"
         private const val SAVE_CURRENT_TOP = "save_current_top"
         private const val SAVE_CURRENT_BOTTOM = "save_current_bottom"
+        private const val SAVE_CURRENT_TOP_POS = "save_current_top_pos"
+        private const val SAVE_CURRENT_BOTTOM_POS = "save_current_bottom_pos"
 
         // Allow more pages to be cached off-screen to allow smooth scrolling
         private const val VIEWPAGER_OFFSCREEN_CACHE = 3
@@ -47,10 +49,14 @@ class HomeFragment : BasePickerFragment() {
     private var currentBottom: String = ""
     private var isFavorite = false
 
+    private var currentTopPosition = 0
+    private var currentBottomPosition = 0
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupListeners()
         if (savedInstanceState != null) restoreFromState(savedInstanceState)
+        setupListeners()
+        initialiseViews()
     }
 
     override fun onStart() {
@@ -68,12 +74,16 @@ class HomeFragment : BasePickerFragment() {
         outState.putBoolean(SAVE_FAVORITE, isFavorite)
         outState.putString(SAVE_CURRENT_TOP, currentTop)
         outState.putString(SAVE_CURRENT_BOTTOM, currentBottom)
+        outState.putInt(SAVE_CURRENT_TOP_POS, currentTopPosition)
+        outState.putInt(SAVE_CURRENT_BOTTOM_POS, currentBottomPosition)
     }
 
     private fun restoreFromState(inState: Bundle) {
         isFavorite = inState.getBoolean(SAVE_FAVORITE)
         currentTop = inState.getString(SAVE_CURRENT_TOP)
         currentBottom = inState.getString(SAVE_CURRENT_BOTTOM)
+        currentTopPosition = inState.getInt(SAVE_CURRENT_TOP_POS)
+        currentBottomPosition = inState.getInt(SAVE_CURRENT_BOTTOM_POS)
     }
 
     private fun setupListeners() {
@@ -100,6 +110,7 @@ class HomeFragment : BasePickerFragment() {
             addOnPageChangeListener(object : PageChangedListener() {
 
                 override fun onPageSelected(position: Int) {
+                    currentTopPosition = position
                     currentTop = topPagerAdapter.getItems()[position].id
                     toggleFavoriteIcon()
                 }
@@ -112,6 +123,7 @@ class HomeFragment : BasePickerFragment() {
             addOnPageChangeListener(object : PageChangedListener() {
 
                 override fun onPageSelected(position: Int) {
+                    currentBottomPosition = position
                     currentBottom = bottomPagerAdapter.getItems()[position].id
                     toggleFavoriteIcon()
                 }
@@ -148,20 +160,29 @@ class HomeFragment : BasePickerFragment() {
         }
     }
 
-    @Subscribe(sticky = true)
-    fun onWardrobeLoaded(loadedEvent: WardrobeLoadedEvent) {
+    private fun initialiseViews() {
         setupViewPagers()
         initialiseCurrents()
         toggleFavoriteIcon()
     }
 
-    @Subscribe
-    fun onTopAdded(topAddedEvent: TopAddedEvent) {
-        topPagerAdapter.setItems(DataRepo.getTops())
+    @Subscribe(sticky = true)
+    fun onWardrobeLoaded(loadedEvent: WardrobeLoadedEvent) {
+        Events.removeSticky(loadedEvent)
+        initialiseViews()
     }
 
-    @Subscribe
+    @Subscribe(sticky = true)
+    fun onTopAdded(topAddedEvent: TopAddedEvent) {
+        Events.removeSticky(topAddedEvent)
+        topPagerAdapter.setItems(DataRepo.getTops())
+        wardrobe_top_viewpager.currentItem = currentTopPosition
+    }
+
+    @Subscribe(sticky = true)
     fun onBottomAdded(bottomAddedEvent: BottomAddedEvent) {
+        Events.removeSticky(bottomAddedEvent)
         bottomPagerAdapter.setItems(DataRepo.getBottoms())
+        wardrobe_bottom_viewpager.currentItem = currentBottomPosition
     }
 }

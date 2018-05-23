@@ -39,6 +39,11 @@ class ImagePagerAdapter<T : WardrobeElement> : PagerAdapter() {
         notifyDataSetChanged()
     }
 
+    fun addItem(topAdded: T) {
+        this.imageList.add(topAdded)
+        notifyDataSetChanged()
+    }
+
     fun getItems() = imageList
 
     override fun isViewFromObject(view: View, `object`: Any) = view == `object`
