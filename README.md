@@ -32,3 +32,7 @@ In the centre, there's a 'shuffle’ button.
 * Images: Glide
 
 * Events: Greenrobot's EventBus
+
+# Download
+
+<a href="https://github.com/CalvinNor/MyWardrobe/raw/master/apk/app-release.apk">Click here to download!</a>
